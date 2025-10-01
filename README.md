@@ -1,6 +1,13 @@
-# ArgoCD Setup Project
+# ArgoCD Setup Pr## Project Structure
 
-This project provides configuration and setup scripts for ArgoCD deployment on a Kubernetes cluster using k3d.
+```
+.
+├── cluster-config.yaml    # k3d cluster configuration
+├── configure.sh          # Setup script for tools installation
+├── create_cluster.sh     # Script to create and verify the cluster
+├── install_argocd_svc.sh # ArgoCD installation and setup script
+└── README.md            # This file
+```is project provides configuration and setup scripts for ArgoCD deployment on a Kubernetes cluster using k3d.
 
 ## Overview
 
@@ -46,6 +53,13 @@ Cluster creation script that:
 - Verifies cluster nodes are running
 - Displays kubeconfig information
 
+### install_argocd_svc.sh
+ArgoCD installation script that:
+- Creates argocd namespace
+- Installs ArgoCD from official manifests
+- Downloads and installs ArgoCD CLI tool
+- Verifies deployment status and shows all resources
+
 ## Quick Start
 
 1. **Make the script executable:**
@@ -68,9 +82,16 @@ Cluster creation script that:
    ./create_cluster.sh
    ```
 
-5. **Verify cluster is running:**
+5. **Install ArgoCD:**
+   ```bash
+   chmod +x install_argocd_svc.sh
+   sudo ./install_argocd_svc.sh
+   ```
+
+6. **Verify cluster and ArgoCD are running:**
    ```bash
    kubectl cluster-info
+   kubectl -n argocd get all
    ```
 
 ## What the Setup Does
@@ -89,8 +110,9 @@ Cluster creation script that:
 
 ## Next Steps
 
-After running the setup, you can proceed with:
-- Installing ArgoCD on the cluster
+After running the complete setup, you can proceed with:
+- Accessing ArgoCD UI (port-forward or ingress setup)
+- Getting ArgoCD admin password: `kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d`
 - Configuring ArgoCD applications
 - Setting up GitOps workflows
 

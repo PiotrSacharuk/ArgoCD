@@ -1,0 +1,16 @@
+#!/bin/bash
+
+NAMESPACE=argocd
+kubectl create namespace ${NAMESPACE}
+kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+kubectl -n ${NAMESPACE} get deployment
+kubectl -n ${NAMESPACE} get service
+kubectl -n ${NAMESPACE} get statefulset
+
+curl -sSL -o argocd-linux-amd64 https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
+install -m 555 argocd-linux-amd64 /usr/local/bin/argocd
+rm argocd-linux-amd64
+
+argocd version
+
+kubectl -n ${NAMESPACE} get all
