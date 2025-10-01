@@ -2,11 +2,13 @@
 
 ```
 .
-├── cluster-config.yaml    # k3d cluster configuration
-├── configure.sh          # Setup script for tools installation
-├── create_cluster.sh     # Script to create and verify the cluster
-├── install_argocd_svc.sh # ArgoCD installation and setup script
-└── README.md            # This file
+├── cluster-config.yaml       # k3d cluster configuration
+├── configure.sh             # Setup script for tools installation
+├── create_cluster.sh        # Script to create and verify the cluster
+├── install_argocd_svc.sh    # ArgoCD installation and setup script
+├── run_argocd_webui.sh      # Start ArgoCD Web UI (background)
+├── stop_argocd_webui.sh     # Stop ArgoCD Web UI
+└── README.md               # This file
 ```is project provides configuration and setup scripts for ArgoCD deployment on a Kubernetes cluster using k3d.
 
 ## Overview
@@ -60,6 +62,20 @@ ArgoCD installation script that:
 - Downloads and installs ArgoCD CLI tool
 - Verifies deployment status and shows all resources
 
+### run_argocd_webui.sh
+ArgoCD Web UI launcher with flexible modes:
+- Sets up service access (NodePort)
+- Displays admin password
+- **Default**: Runs port-forward in background
+- **Option -f**: Runs in foreground (blocks terminal)
+- Checks for existing processes to avoid duplicates
+
+### stop_argocd_webui.sh
+ArgoCD Web UI stopper that:
+- Finds all ArgoCD port-forward processes
+- Safely terminates background processes
+- Verifies successful shutdown
+
 ## Quick Start
 
 1. **Make the script executable:**
@@ -108,13 +124,38 @@ ArgoCD installation script that:
 - Creates a local Kubernetes cluster with 3 nodes total
 - Provides isolated environment for ArgoCD testing and development
 
+## ArgoCD Web UI Management
+
+After installation, manage the ArgoCD Web UI:
+
+**Start ArgoCD Web UI:**
+```bash
+chmod +x run_argocd_webui.sh
+
+# Run in background (default - doesn't block terminal)
+./run_argocd_webui.sh
+
+# Run in foreground (blocks terminal, use Ctrl+C to stop)
+./run_argocd_webui.sh -f
+```
+
+**Stop ArgoCD Web UI:**
+```bash
+chmod +x stop_argocd_webui.sh
+./stop_argocd_webui.sh
+```
+
+**Access Details:**
+- URL: https://localhost:8080
+- Username: admin
+- Password: (displayed by run script)
+
 ## Next Steps
 
 After running the complete setup, you can proceed with:
-- Accessing ArgoCD UI (port-forward or ingress setup)
-- Getting ArgoCD admin password: `kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d`
 - Configuring ArgoCD applications
 - Setting up GitOps workflows
+- Creating application manifests
 
 ## Troubleshooting
 
