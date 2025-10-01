@@ -1,14 +1,14 @@
-# ArgoCD Setup Pr## Project Structure
+# ArgoCD Setup Project Structure
 
 ```
 .
-├── cluster-config.yaml       # k3d cluster configuration
-├── configure.sh             # Setup script for tools installation
-├── create_cluster.sh        # Script to create and verify the cluster
-├── install_argocd_svc.sh    # ArgoCD installation and setup script
-├── run_argocd_webui.sh      # Start ArgoCD Web UI (background)
-├── stop_argocd_webui.sh     # Stop ArgoCD Web UI
-└── README.md               # This file
+├── cluster-config.yaml         # k3d cluster configuration
+├── 01_configure.sh             # Setup script for tools installation
+├── 02_create_cluster.sh        # Script to create and verify the cluster
+├── 03_install_argocd_svc.sh    # ArgoCD installation and setup script
+├── 04_run_argocd_webui.sh      # Start ArgoCD Web UI (background)
+├── 04b_stop_argocd_webui.sh    # Stop ArgoCD Web UI (optional)
+└── README.md                   # This file
 ```is project provides configuration and setup scripts for ArgoCD deployment on a Kubernetes cluster using k3d.
 
 ## Overview
@@ -42,27 +42,27 @@ k3d cluster configuration file that defines:
 - 2 agent nodes
 - Simple cluster setup
 
-### configure.sh
+### 01_configure.sh
 Bash script that handles:
 - Docker user group configuration for WSL
 - kubectl installation (latest stable version)
 - k3d installation
 - Tool verification
 
-### create_cluster.sh
+### 02_create_cluster.sh
 Cluster creation script that:
 - Creates the k3d cluster named "argocd-cluster"
 - Verifies cluster nodes are running
 - Displays kubeconfig information
 
-### install_argocd_svc.sh
+### 03_install_argocd_svc.sh
 ArgoCD installation script that:
 - Creates argocd namespace
 - Installs ArgoCD from official manifests
 - Downloads and installs ArgoCD CLI tool
 - Verifies deployment status and shows all resources
 
-### run_argocd_webui.sh
+### 04_run_argocd_webui.sh
 ArgoCD Web UI launcher with flexible modes:
 - Sets up service access (NodePort)
 - Displays admin password
@@ -70,38 +70,36 @@ ArgoCD Web UI launcher with flexible modes:
 - **Option -f**: Runs in foreground (blocks terminal)
 - Checks for existing processes to avoid duplicates
 
-### stop_argocd_webui.sh
-ArgoCD Web UI stopper that:
+### 04b_stop_argocd_webui.sh
+ArgoCD Web UI stopper (optional) that:
 - Finds all ArgoCD port-forward processes
 - Safely terminates background processes
 - Verifies successful shutdown
 
 ## Quick Start
 
-1. **Make the script executable:**
+1. **Setup tools and environment:**
    ```bash
-   chmod +x configure.sh
+   chmod +x 01_configure.sh
+   ./01_configure.sh
    ```
 
-2. **Run the configuration script:**
+2. **Create k3d cluster:**
    ```bash
-   ./configure.sh
+   chmod +x 02_create_cluster.sh
+   ./02_create_cluster.sh
    ```
 
-3. **Make the cluster creation script executable:**
+3. **Install ArgoCD:**
    ```bash
-   chmod +x create_cluster.sh
+   chmod +x 03_install_argocd_svc.sh
+   sudo ./03_install_argocd_svc.sh
    ```
 
-4. **Create the k3d cluster:**
+4. **Start ArgoCD Web UI:**
    ```bash
-   ./create_cluster.sh
-   ```
-
-5. **Install ArgoCD:**
-   ```bash
-   chmod +x install_argocd_svc.sh
-   sudo ./install_argocd_svc.sh
+   chmod +x 04_run_argocd_webui.sh
+   ./04_run_argocd_webui.sh
    ```
 
 6. **Verify cluster and ArgoCD are running:**
@@ -130,19 +128,17 @@ After installation, manage the ArgoCD Web UI:
 
 **Start ArgoCD Web UI:**
 ```bash
-chmod +x run_argocd_webui.sh
-
 # Run in background (default - doesn't block terminal)
-./run_argocd_webui.sh
+./04_run_argocd_webui.sh
 
 # Run in foreground (blocks terminal, use Ctrl+C to stop)
-./run_argocd_webui.sh -f
+./04_run_argocd_webui.sh -f
 ```
 
-**Stop ArgoCD Web UI:**
+**Stop ArgoCD Web UI (optional):**
 ```bash
-chmod +x stop_argocd_webui.sh
-./stop_argocd_webui.sh
+chmod +x 04b_stop_argocd_webui.sh
+./04b_stop_argocd_webui.sh
 ```
 
 **Access Details:**

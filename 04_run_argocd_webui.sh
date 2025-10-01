@@ -55,7 +55,7 @@ else
         echo "Username: admin"
         echo "Password: (shown above)"
         echo ""
-        echo "To stop the port-forward, run: ./stop_argocd_webui.sh"
+        echo "To stop the port-forward, run: ./04b_stop_argocd_webui.sh"
         echo "Or manually: kill $PORT_FORWARD_PID"
     else
         echo "Failed to start port-forward"
