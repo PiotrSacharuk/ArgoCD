@@ -28,10 +28,15 @@ This repository contains:
 
 ```
 .
-├── cluster-config.yaml    # k3d cluster configuration
-├── configure.sh           # Setup script for tools installation
-├── create_cluster.sh      # Script to create and verify the cluster
-└── README.md              # This file
+├── cluster-config.yaml        # k3d cluster configuration (basic)
+├── 01_configure.sh            # Setup script for tools installation
+├── 01b_generate_dev_config.sh # Generate dev-cluster-config.yaml with dynamic IP
+├── 02_create_cluster.sh       # Script to create and verify the cluster
+├── 02b_create_dev_cluster.sh  # Create development cluster with dynamic config
+├── 03_install_argocd_svc.sh   # ArgoCD installation and setup script
+├── 04_run_argocd_webui.sh     # Start ArgoCD Web UI (background)
+├── 04b_stop_argocd_webui.sh   # Stop ArgoCD Web UI (optional)
+└── README.md                  # This file
 ```
 
 ## Files Description
@@ -49,11 +54,24 @@ Bash script that handles:
 - k3d installation
 - Tool verification
 
+### 01b_generate_dev_config.sh
+Dynamic configuration generator that:
+- Detects current IP address from eth0 interface
+- Generates dev-cluster-config.yaml with TLS SAN
+- Provides alternative cluster configuration for development
+
 ### 02_create_cluster.sh
 Cluster creation script that:
 - Creates the k3d cluster named "argocd-cluster"
 - Verifies cluster nodes are running
 - Displays kubeconfig information
+
+### 02b_create_dev_cluster.sh
+Development cluster creation script that:
+- Creates k3d cluster named "dev-cluster"
+- Uses dev-cluster-config.yaml (with dynamic IP/TLS SAN)
+- Automatically updates kubeconfig with external IP
+- Verifies cluster nodes and connection
 
 ### 03_install_argocd_svc.sh
 ArgoCD installation script that:

@@ -1,0 +1,4 @@
+# contains files from local training playground and generated files
+argocd-training-public-repo
+
+dev-cluster-config.yaml
