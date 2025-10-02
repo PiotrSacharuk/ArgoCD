@@ -38,6 +38,8 @@ This repository contains:
 ├── 04_run_argocd_webui.sh     # Start ArgoCD Web UI (background)
 ├── 04b_stop_argocd_webui.sh   # Stop ArgoCD Web UI (optional)
 ├── 06_setup_argocd_dev.sh     # Setup ArgoCD with dev-cluster
+├── 08_cleanup_argocd_cluster.sh # Cleanup/reset main ArgoCD cluster
+├── 08b_cleanup_dev_cluster.sh  # Cleanup/reset dev-cluster (optional)
 └── README.md                  # This file
 ```
 
@@ -103,6 +105,20 @@ ArgoCD development setup that:
 - Provides admin password for login
 - Lists existing projects, repos, and applications
 - Guides through creating dev-argocd project
+
+### 08_cleanup_argocd_cluster.sh
+ArgoCD cluster cleanup script that:
+- Stops ArgoCD WebUI port-forward processes
+- Deletes k3d ArgoCD cluster completely
+- Removes ArgoCD CLI configuration
+- Shows remaining clusters and recreation instructions
+
+### 08b_cleanup_dev_cluster.sh
+Dev-cluster cleanup script (optional) that:
+- Deletes k3d dev-cluster completely
+- Removes generated dev-cluster-config.yaml
+- Removes dev-cluster from ArgoCD (if accessible)
+- Provides instructions for recreation
 
 ## Quick Start
 
