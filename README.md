@@ -28,6 +28,7 @@ This repository contains:
 
 ```
 .
+├── .env.example               # Environment variables template
 ├── cluster-config.yaml        # k3d cluster configuration (basic)
 ├── 01_configure.sh            # Setup script for tools installation
 ├── 01b_generate_dev_config.sh # Generate dev-cluster-config.yaml with dynamic IP
@@ -105,7 +106,13 @@ ArgoCD development setup that:
 
 ## Quick Start
 
-1. **Setup tools and environment:**
+1. **Setup environment variables:**
+   ```bash
+   cp .env.example .env
+   # Edit .env with your configuration
+   ```
+
+2. **Setup tools and environment:**
    ```bash
    chmod +x 01_configure.sh
    ./01_configure.sh

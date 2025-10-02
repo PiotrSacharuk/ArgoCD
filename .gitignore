@@ -1,4 +1,8 @@
 # contains files from local training playground and generated files
 argocd-training-public-repo
 
+# Generated configuration files
 dev-cluster-config.yaml
+
+# Environment configuration (can contain sensitive data)
+.env

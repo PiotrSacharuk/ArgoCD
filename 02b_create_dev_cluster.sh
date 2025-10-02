@@ -1,5 +1,16 @@
 #!/bin/bash
 
+# Load environment variables
+if [ -f ".env" ]; then
+    source .env
+    echo "Loaded environment variables from .env"
+else
+    echo "Error: .env file not found"
+    echo "Please copy .env.example to .env and configure it:"
+    echo "cp .env.example .env"
+    exit 1
+fi
+
 echo "Creating k3d development cluster..."
 
 # Check if dev-cluster-config.yaml exists
@@ -12,7 +23,7 @@ fi
 echo "Using configuration from dev-cluster-config.yaml"
 
 # Create the k3d cluster with dev configuration
-k3d cluster create dev-cluster --config dev-cluster-config.yaml
+k3d cluster create ${DEV_CLUSTER_NAME} --config dev-cluster-config.yaml
 
 # Wait for cluster to be ready
 echo ""
@@ -24,17 +35,17 @@ echo "Testing cluster connectivity..."
 kubectl get nodes
 
 # Get the IP address and port for kubeconfig update
-IP=`ifconfig eth0 | grep inet | grep -v inet6 | awk '{print $2}'`
-K3D_PORT=$(docker ps | grep "k3d-dev-cluster-serverlb" | grep -o "0.0.0.0:[0-9]*->6443" | cut -d: -f2 | cut -d- -f1)
+IP=`ifconfig ${INTERFACE_NAME} | grep inet | grep -v inet6 | awk '{print $2}'`
+K3D_PORT=$(docker ps | grep "k3d-${DEV_CLUSTER_NAME}-serverlb" | grep -o "0.0.0.0:[0-9]*->6443" | cut -d: -f2 | cut -d- -f1)
 
 if [ ! -z "$IP" ] && [ ! -z "$K3D_PORT" ]; then
     echo ""
     echo "Updating kubeconfig with external IP: $IP:$K3D_PORT"
 
     # Update server URL in kubeconfig for dev-cluster
-    kubectl config set-cluster k3d-dev-cluster --server="https://$IP:$K3D_PORT"
+    kubectl config set-cluster k3d-${DEV_CLUSTER_NAME} --server="https://$IP:$K3D_PORT"
 
-    echo "Updated k3d-dev-cluster server URL to: https://$IP:$K3D_PORT"
+    echo "Updated k3d-${DEV_CLUSTER_NAME} server URL to: https://$IP:$K3D_PORT"
 else
     echo "Warning: Could not detect IP ($IP) or port ($K3D_PORT), kubeconfig not updated"
 fi
@@ -55,4 +66,4 @@ echo "Kubeconfig context:"
 kubectl config current-context
 
 echo ""
-echo "Development cluster 'dev-cluster' created successfully"
+echo "Development cluster '${DEV_CLUSTER_NAME}' created successfully"

@@ -1,6 +1,16 @@
 #!/bin/bash
 
-NAMESPACE=argocd
+# Load environment variables
+if [ -f ".env" ]; then
+    source .env
+else
+    echo "Error: .env file not found"
+    echo "Please copy .env.example to .env and configure it:"
+    echo "cp .env.example .env"
+    exit 1
+fi
+
+NAMESPACE=${ARGOCD_NAMESPACE}
 ARGOCD_SERVER=argocd-server
 
 # Check for -f flag (foreground mode)
@@ -38,11 +48,11 @@ if [ "$FOREGROUND" = true ]; then
     echo "----------------------------------------"
 
     # Start port-forward (this will block until Ctrl+C)
-    kubectl port-forward svc/${ARGOCD_SERVER} -n ${NAMESPACE} 8080:443
+    kubectl port-forward svc/${ARGOCD_SERVER} -n ${NAMESPACE} ${ARGOCD_PORT}:443
 else
     # Run in background mode (default)
     echo "Starting port-forward in background..."
-    kubectl port-forward svc/${ARGOCD_SERVER} -n ${NAMESPACE} 8080:443 > /dev/null 2>&1 &
+    kubectl port-forward svc/${ARGOCD_SERVER} -n ${NAMESPACE} ${ARGOCD_PORT}:443 > /dev/null 2>&1 &
     PORT_FORWARD_PID=$!
 
     # Wait a moment for port-forward to establish
@@ -51,7 +61,7 @@ else
     # Check if port-forward started successfully
     if kill -0 $PORT_FORWARD_PID 2>/dev/null; then
         echo "Port-forward started successfully (PID: $PORT_FORWARD_PID)"
-        echo "ArgoCD UI is now available at: https://localhost:8080"
+        echo "ArgoCD UI is now available at: https://localhost:${ARGOCD_PORT}"
         echo "Username: admin"
         echo "Password: (shown above)"
         echo ""
