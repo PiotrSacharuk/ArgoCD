@@ -36,6 +36,7 @@ This repository contains:
 ├── 03_install_argocd_svc.sh   # ArgoCD installation and setup script
 ├── 04_run_argocd_webui.sh     # Start ArgoCD Web UI (background)
 ├── 04b_stop_argocd_webui.sh   # Stop ArgoCD Web UI (optional)
+├── 06_setup_argocd_dev.sh     # Setup ArgoCD with dev-cluster
 └── README.md                  # This file
 ```
 
@@ -93,6 +94,14 @@ ArgoCD Web UI stopper (optional) that:
 - Finds all ArgoCD port-forward processes
 - Safely terminates background processes
 - Verifies successful shutdown
+
+### 06_setup_argocd_dev.sh
+ArgoCD development setup that:
+- Switches to argocd-cluster context
+- Adds dev-cluster to ArgoCD
+- Provides admin password for login
+- Lists existing projects, repos, and applications
+- Guides through creating dev-argocd project
 
 ## Quick Start
 
