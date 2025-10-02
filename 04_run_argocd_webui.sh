@@ -21,6 +21,14 @@ fi
 
 echo "Setting up ArgoCD Web UI access..."
 
+# Ensure ArgoCD server is ready
+echo "Checking if ArgoCD server is ready..."
+if ! kubectl get pods -n ${NAMESPACE} -l app.kubernetes.io/name=argocd-server --field-selector=status.phase=Running 2>/dev/null | grep -q argocd-server; then
+    echo "Warning: ArgoCD server may not be fully ready yet."
+    echo "If port-forward fails, please wait a few minutes for ArgoCD to start completely."
+    echo ""
+fi
+
 # Change service type to NodePort for easier access
 kubectl patch svc ${ARGOCD_SERVER} -n ${NAMESPACE} -p '{"spec": {"type": "NodePort"}}'
 

@@ -1,5 +1,7 @@
-# ArgoCD Setup Project Structure
-
+# ArgoCD Setup Project Structu├── .env.example               # Environment variables template
+├── 00_setup_complete_environment.sh # Complete automated setup
+├── cluster-config.yaml        # k3d cluster configuration (basic)
+├── 01_configure.sh            # Setup script for tools installation
 ```
 .
 ├── cluster-config.yaml         # k3d cluster configuration
@@ -28,22 +30,39 @@ This repository contains:
 
 ```
 .
-├── .env.example               # Environment variables template
-├── cluster-config.yaml        # k3d cluster configuration (basic)
-├── 01_configure.sh            # Setup script for tools installation
-├── 01b_generate_dev_config.sh # Generate dev-cluster-config.yaml with dynamic IP
-├── 02_create_cluster.sh       # Script to create and verify the cluster
-├── 02b_create_dev_cluster.sh  # Create development cluster with dynamic config
-├── 03_install_argocd_svc.sh   # ArgoCD installation and setup script
-├── 04_run_argocd_webui.sh     # Start ArgoCD Web UI (background)
-├── 04b_stop_argocd_webui.sh   # Stop ArgoCD Web UI (optional)
-├── 06_setup_argocd_dev.sh     # Setup ArgoCD with dev-cluster
+├── .env.example                 # Environment variables template
+├── 00_setup_complete_environment.sh # Complete ArgoCD setup
+├── 00b_setup_dev_environment.sh # Dev cluster setup
+├── cluster-config.yaml          # k3d cluster configuration (basic)
+├── 01_configure.sh              # Setup script for tools installation
+├── 01b_generate_dev_config.sh   # Generate dev-cluster-config.yaml with dynamic IP
+├── 02_create_cluster.sh         # Script to create and verify the cluster
+├── 02b_create_dev_cluster.sh    # Create development cluster with dynamic config
+├── 03_install_argocd_svc.sh     # ArgoCD installation and setup script
+├── 04_run_argocd_webui.sh       # Start ArgoCD Web UI (background)
+├── 04b_stop_argocd_webui.sh     # Stop ArgoCD Web UI (optional)
+├── 06_setup_argocd_dev.sh       # Setup ArgoCD with dev-cluster
 ├── 08_cleanup_argocd_cluster.sh # Cleanup/reset main ArgoCD cluster
-├── 08b_cleanup_dev_cluster.sh  # Cleanup/reset dev-cluster (optional)
-└── README.md                  # This file
+├── 08b_cleanup_dev_cluster.sh   # Cleanup/reset dev-cluster (optional)
+└── README.md                    # This file
 ```
 
 ## Files Description
+
+### 00_setup_complete_environment.sh
+ArgoCD main environment setup that:
+- Configures tools and environment
+- Creates ArgoCD cluster
+- Installs and configures ArgoCD
+- Starts ArgoCD WebUI
+- Provides ready-to-use ArgoCD environment
+
+### 00b_setup_dev_environment.sh
+Dev environment setup that:
+- Generates dev cluster configuration
+- Creates development cluster
+- Integrates dev cluster with existing ArgoCD
+- Requires ArgoCD to be already running
 
 ### cluster-config.yaml
 k3d cluster configuration file that defines:
@@ -121,6 +140,28 @@ Dev-cluster cleanup script (optional) that:
 - Provides instructions for recreation
 
 ## Quick Start
+
+### Option 1: Complete Automated Setup (Recommended)
+
+1. **Setup environment variables:**
+   ```bash
+   cp .env.example .env
+   # Edit .env with your configuration
+   ```
+
+2. **Setup ArgoCD main environment:**
+   ```bash
+   chmod +x 00_setup_complete_environment.sh
+   ./00_setup_complete_environment.sh
+   ```
+
+3. **Setup dev environment (optional):**
+   ```bash
+   chmod +x 00b_setup_dev_environment.sh
+   ./00b_setup_dev_environment.sh
+   ```
+
+### Option 2: Manual Step-by-Step Setup
 
 1. **Setup environment variables:**
    ```bash

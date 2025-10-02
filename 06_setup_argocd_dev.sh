@@ -27,22 +27,27 @@ echo "Getting ArgoCD admin password..."
 ARGOCD_PASSWORD=$(kubectl -n ${ARGOCD_NAMESPACE} get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d)
 echo "ArgoCD admin password: $ARGOCD_PASSWORD"
 
-# Add dev-cluster to ArgoCD (if it exists)
+# Login to ArgoCD first
+echo ""
+echo "Logging into ArgoCD..."
+echo "Username: ${ARGOCD_USERNAME}"
+echo "Password: $ARGOCD_PASSWORD"
+argocd login localhost:${ARGOCD_PORT} --username ${ARGOCD_USERNAME} --password $ARGOCD_PASSWORD --insecure
+
+# Add dev-cluster to ArgoCD (if it exists and not already added)
 echo ""
 if kubectl config get-contexts k3d-${DEV_CLUSTER_NAME} &> /dev/null; then
-    echo "Adding ${DEV_CLUSTER_NAME} to ArgoCD..."
-    argocd cluster add k3d-${DEV_CLUSTER_NAME} --name ${DEV_CLUSTER_NAME}
-    echo "Dev-cluster added successfully"
+    echo "Checking if ${DEV_CLUSTER_NAME} is already in ArgoCD..."
+    if argocd cluster list --server localhost:${ARGOCD_PORT} --insecure | grep -q "k3d-${DEV_CLUSTER_NAME}"; then
+        echo "${DEV_CLUSTER_NAME} is already configured in ArgoCD"
+    else
+        echo "Adding ${DEV_CLUSTER_NAME} to ArgoCD..."
+        echo "y" | argocd cluster add k3d-${DEV_CLUSTER_NAME} --name ${DEV_CLUSTER_NAME} --server localhost:${ARGOCD_PORT} --insecure
+        echo "Dev-cluster added successfully"
+    fi
 else
     echo "Warning: k3d-${DEV_CLUSTER_NAME} context not found. Create dev-cluster first with ./02b_create_dev_cluster.sh"
 fi
-
-# Login to ArgoCD
-echo ""
-echo "Logging into ArgoCD..."
-echo "Please use username: ${ARGOCD_USERNAME}"
-echo "Password: $ARGOCD_PASSWORD"
-argocd login localhost:${ARGOCD_PORT}
 
 # Display current ArgoCD status
 echo ""
