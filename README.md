@@ -1,17 +1,6 @@
-# ArgoCD Setup Project Structu├── .env.example               # Environment variables template
-├── 00_setup_complete_environment.sh # Complete automated setup
-├── cluster-config.yaml        # k3d cluster configuration (basic)
-├── 01_configure.sh            # Setup script for tools installation
-```
-.
-├── cluster-config.yaml         # k3d cluster configuration
-├── 01_configure.sh             # Setup script for tools installation
-├── 02_create_cluster.sh        # Script to create and verify the cluster
-├── 03_install_argocd_svc.sh    # ArgoCD installation and setup script
-├── 04_run_argocd_webui.sh      # Start ArgoCD Web UI (background)
-├── 04b_stop_argocd_webui.sh    # Stop ArgoCD Web UI (optional)
-└── README.md                   # This file
-```is project provides configuration and setup scripts for ArgoCD deployment on a Kubernetes cluster using k3d.
+# ArgoCD Setup Project
+
+This project provides configuration and setup scripts for ArgoCD deployment on a Kubernetes cluster using k3d.
 
 ## Overview
 
